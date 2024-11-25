@@ -1,7 +1,8 @@
 const container = document.querySelector(".container");
 const blackButton = document.querySelector('.black-button');
 const randomColorsButton = document.querySelector('.random-colors-button');
-const gridSize = 16;
+const squaresQuantityButton = document.querySelector('.squares-quantity-button');
+let gridSize = 16;
 const CONTAINER_SIZE = 600;
 
 let colorMode = 'black';
@@ -11,6 +12,11 @@ container.style.width = `${CONTAINER_SIZE}px`;
 
 blackButton.addEventListener('click', () => setColorMode('black'));
 randomColorsButton.addEventListener('click', () => setColorMode('random'));
+
+squaresQuantityButton.addEventListener('click', () => {
+    gridSize = +prompt("How many squares do you need?");
+    generateGrid(gridSize);
+})
 
 function generateGrid(size) {
     container.innerHTML = '';
