@@ -1,37 +1,48 @@
 const container = document.querySelector(".container");
 const blackButton = document.querySelector('.black-button');
 const randomColorsButton = document.querySelector('.random-colors-button');
-
 const gridSize = 16;
-const containerSize = 600;
+const CONTAINER_SIZE = 600;
+
 let colorMode = 'black';
 
-container.style.height = `${containerSize}px`;
-container.style.width = `${containerSize}px`;
+container.style.height = `${CONTAINER_SIZE}px`;
+container.style.width = `${CONTAINER_SIZE}px`;
 
-blackButton.addEventListener('click', () => {
-    colorMode = 'black';
-    generateGrid(gridSize);
-})
-
-randomColorsButton.addEventListener('click', () => {
-    colorMode = 'random';
-    generateGrid(gridSize);
-})
+blackButton.addEventListener('click', () => setColorMode('black'));
+randomColorsButton.addEventListener('click', () => setColorMode('random'));
 
 function generateGrid(size) {
-    removeAllChildNodes(container);
-    const squaresQuantity = size ** 2;
+    container.innerHTML = '';
+    const squareMaxWidth = (CONTAINER_SIZE - 2) / size;
+    const fragment = document.createDocumentFragment();
 
-    for (let i = 0; i < squaresQuantity; ++i) {
-        const square = document.createElement('div');
-        square.classList.add('square');
-        square.style.maxWidth = `${(containerSize - 2) / size}px`
-        colorMode === 'black' 
-            ? square.addEventListener('mouseover', (e) => paintBlack(e.target)) 
-            : square.addEventListener('mouseover', (e) => paintRandomColor(e.target));
-    
-        container.appendChild(square);
+    for (let i = 0; i < size * size; ++i) {
+        const square = createSquare(squareMaxWidth);
+        fragment.appendChild(square);
+    }
+
+    container.appendChild(fragment);
+}
+
+function createSquare(maxWidth) {
+    const square = document.createElement('div');
+    square.classList.add('square');
+    square.style.maxWidth = `${maxWidth}px`
+    square.addEventListener('mouseover', (event) => handleSquareHover(event));
+    return square;
+}
+
+function setColorMode(mode) {
+    colorMode = mode;
+    generateGrid(gridSize);
+}
+
+function handleSquareHover(event) {
+    if (colorMode === 'black') {
+        paintBlack(event.target);
+    } else {
+        paintRandomColor(event.target);
     }
 }
 
@@ -42,12 +53,6 @@ function paintBlack(square) {
 function paintRandomColor(square) {
     const randomColor = Math.floor(Math.random()*16777215).toString(16);
     square.style.backgroundColor = `#${randomColor}`;
-}
-
-function removeAllChildNodes(parent) {
-    while (parent.firstChild) {
-        parent.removeChild(parent.firstChild);
-    }
 }
 
 generateGrid(gridSize);
