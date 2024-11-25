@@ -14,7 +14,14 @@ blackButton.addEventListener('click', () => setColorMode('black'));
 randomColorsButton.addEventListener('click', () => setColorMode('random'));
 
 squaresQuantityButton.addEventListener('click', () => {
-    gridSize = +prompt("How many squares do you need?");
+    const input = prompt("How many squares per side (1-100)?");
+    const newSize = parseInt(input, 10);
+
+    if (isNaN(newSize) || newSize <= 0 || newSize > 100) {
+        alert("Please enter a valid number between 1 and 100.");
+        return;
+    }
+    gridSize = newSize;
     generateGrid(gridSize);
 })
 
